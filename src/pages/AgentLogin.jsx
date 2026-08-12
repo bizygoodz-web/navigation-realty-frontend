@@ -97,6 +97,10 @@ export default function AgentLogin({ onLoginSuccess }) {
           <div style={{ fontFamily: "Fraunces, serif", fontSize: 22, fontWeight: 600, color: INK, marginBottom: 6 }}>
             {mode === "login" ? "Welcome back" : "Create your agent account"}
           </div>
+          {/* TEMPORARY DEBUG LINE - remove once VITE_API_URL is confirmed working */}
+          <div style={{ fontSize: 10, color: "#B4553C", marginBottom: 12, fontFamily: "monospace", wordBreak: "break-all" }}>
+            DEBUG API_BASE_URL = "{API_BASE_URL}"
+          </div>
           <div style={{ fontSize: 13, color: SLATE, marginBottom: 28 }}>
             {mode === "login" ? "Sign in to your dashboard" : "Set up Navigation Realty for your brokerage"}
           </div>
@@ -204,3 +208,4 @@ const linkStyle = {
   background: "none", border: "none", color: BRASS, fontWeight: 600, cursor: "pointer",
   fontSize: 13, fontFamily: "Inter, sans-serif", padding: 0,
 };
+
