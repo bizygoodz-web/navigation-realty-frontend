@@ -10,6 +10,7 @@ import ListingsPage from "./dashboard/ListingsPage";
 import DocumentsPage from "./dashboard/DocumentsPage";
 import CalendarPage from "./dashboard/CalendarPage";
 import AIStudioPage from "./dashboard/AIStudioPage";
+import NewContactModal from "./dashboard/NewContactModal";
 
 const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');";
@@ -268,6 +269,7 @@ function LedgerEntry({ entry, index, isLast }) {
 export default function AgentDashboard() {
   const [activeNav, setActiveNav] = useState("pipeline");
   const [query, setQuery] = useState("");
+  const [showNewContact, setShowNewContact] = useState(false);
 
   const filteredDeals = useMemo(() => {
     if (!query.trim()) return DEALS;
@@ -379,6 +381,7 @@ export default function AgentDashboard() {
                 <Bell size={15} color="#56606B" />
               </button>
               <button
+                onClick={() => setShowNewContact(true)}
                 style={{
                   display: "flex", alignItems: "center", gap: 7, background: "#14304A", color: "#F6F7F5",
                   border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 500,
@@ -444,6 +447,18 @@ export default function AgentDashboard() {
           </div>
         </div>
       </div>
+
+      <NewContactModal
+        isOpen={showNewContact}
+        onClose={() => setShowNewContact(false)}
+        onCreated={() => {
+          // Real app: refetch the contacts list here. The Contacts page
+          // still shows sample data, so a newly created contact won't
+          // appear there yet without a shared data-refresh mechanism.
+        }}
+      />
     </div>
   );
 }
+
+
