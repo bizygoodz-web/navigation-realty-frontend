@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Search, Phone, Mail, Clock, ChevronRight, Loader2 } from "lucide-react";
+import { apiFetch } from "../../api";
 
 const INK = "#132A40";
 const SLATE = "#56606B";
 const MUTED = "#8B94A0";
 const LINE = "#E1E4E2";
 const CLAY = "#A5522F";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 const STATUS_STYLE = {
   new_lead: { bg: "#EFE7D4", fg: "#8C6A34", label: "New lead" },
@@ -38,10 +37,7 @@ export default function ContactsPage() {
       setLoading(true);
       setError("");
       try {
-        const token = localStorage.getItem("realtyflow_agent_token");
-        const res = await fetch(`${API_BASE_URL}/contacts`, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        });
+        const res = await apiFetch("/contacts");
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
           throw new Error(body.detail || `Couldn't load contacts (${res.status})`);
@@ -59,6 +55,8 @@ export default function ContactsPage() {
           }))
         );
       } catch (err) {
+        // apiFetch already redirects to /login on a real session expiry,
+        // so any error that reaches here is something else worth showing.
         setError(err.message || "Couldn't load contacts.");
       } finally {
         setLoading(false);
@@ -133,9 +131,6 @@ export default function ContactsPage() {
       {!loading && error && (
         <div style={{ background: "#F5E9E4", color: CLAY, fontSize: 13, padding: "14px 16px", borderRadius: 10, marginBottom: 16 }}>
           {error}
-          {error.toLowerCase().includes("credential") && (
-            <div style={{ marginTop: 4, fontStyle: "italic" }}>Your session may have expired — try logging in again.</div>
-          )}
         </div>
       )}
 
