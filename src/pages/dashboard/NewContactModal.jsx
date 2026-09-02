@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X, Loader2 } from "lucide-react";
+import { apiFetch } from "../../api";
 
 const INK = "#132A40";
 const SLATE = "#56606B";
@@ -7,8 +8,6 @@ const MUTED = "#8B94A0";
 const LINE = "#E1E4E2";
 const GOLD = "#C7A46A";
 const CLAY = "#A5522F";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 export default function NewContactModal({ isOpen, onClose, onCreated }) {
   const [firstName, setFirstName] = useState("");
@@ -32,13 +31,8 @@ export default function NewContactModal({ isOpen, onClose, onCreated }) {
     setError("");
     setLoading(true);
     try {
-      const token = localStorage.getItem("realtyflow_agent_token");
-      const res = await fetch(`${API_BASE_URL}/contacts`, {
+      const res = await apiFetch("/contacts", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify({
           first_name: firstName,
           last_name: lastName,
