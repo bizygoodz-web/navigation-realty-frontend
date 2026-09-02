@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Sparkles, Loader2, Copy, Check } from "lucide-react";
+import { apiFetch } from "../../api";
 
 const INK = "#132A40";
 const SLATE = "#56606B";
 const MUTED = "#8B94A0";
 const LINE = "#E1E4E2";
 const GOLD = "#C7A46A";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 const CONTENT_TYPES = [
   { key: "follow_up_email", label: "Follow-up email" },
@@ -29,13 +28,8 @@ export default function AIStudioPage() {
     setDraft("");
     setLoading(true);
     try {
-      const token = localStorage.getItem("realtyflow_agent_token");
-      const res = await fetch(`${API_BASE_URL}/ai/generate`, {
+      const res = await apiFetch("/ai/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify({ content_type: contentType, context }),
       });
       if (!res.ok) {
@@ -120,11 +114,6 @@ export default function AIStudioPage() {
         {error && (
           <div style={{ background: "#F5E9E4", color: "#A5522F", fontSize: 12.5, padding: "11px 13px", borderRadius: 10, marginTop: 14 }}>
             {error}
-            {error.toLowerCase().includes("api") && (
-              <div style={{ marginTop: 4, fontStyle: "italic" }}>
-                This usually means ANTHROPIC_API_KEY isn't set on the backend yet.
-              </div>
-            )}
           </div>
         )}
 
