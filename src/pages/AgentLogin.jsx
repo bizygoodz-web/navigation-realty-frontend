@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
 
 const FONT_IMPORT =
@@ -24,6 +24,14 @@ export default function AgentLogin({ onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [expiredNotice, setExpiredNotice] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reason") === "session_expired" || params.get("expired") === "1") {
+      setExpiredNotice(true);
+    }
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -97,9 +105,15 @@ export default function AgentLogin({ onLoginSuccess }) {
           <div style={{ fontFamily: "Fraunces, serif", fontSize: 22, fontWeight: 600, color: INK, marginBottom: 6 }}>
             {mode === "login" ? "Welcome back" : "Create your agent account"}
           </div>
-          <div style={{ fontSize: 13, color: SLATE, marginBottom: 28 }}>
+          <div style={{ fontSize: 13, color: SLATE, marginBottom: 20 }}>
             {mode === "login" ? "Sign in to your dashboard" : "Set up Navigation Realty for your brokerage"}
           </div>
+
+          {expiredNotice && mode === "login" && (
+            <div style={{ background: "#EEF3F5", color: "#3D5A6C", fontSize: 12.5, padding: "10px 12px", borderRadius: 8, marginBottom: 16 }}>
+              Your session expired — please sign in again.
+            </div>
+          )}
 
           {mode === "signup" && (
             <>
